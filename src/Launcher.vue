@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="sc-launcher" :class="{opened: isOpen}" @click.prevent="isOpen ? close() : open()" :style="{backgroundColor: colors.launcher.bg}">
+    <!-- <div :class="{ opened: isOpen, 'sc-launcher': true, dynamicHeight: dynamicHeight }" @click.prevent="isOpen ? close() : open()" :style="{backgroundColor: colors.launcher.bg}">
       <div v-if="newMessagesCount > 0 && !isOpen" class="sc-new-messsages-count">
         {{newMessagesCount}}
       </div>
       <img v-if="isOpen" class="sc-closed-icon" :src="icons.close.img"  :alt="icons.close.name" />
       <img v-else class="sc-open-icon" :src="icons.open.img"  :alt="icons.open.name" />
-    </div>
+    </div> -->
     <ChatWindow
       :messageList="messageList"
       :onUserInputSubmit="onMessageWasSent"
@@ -23,6 +23,7 @@
       :alwaysScrollToBottom="alwaysScrollToBottom"
       :messageStyling="messageStyling"
       :disableUserListToggle="disableUserListToggle"
+      :dynamicHeight="dynamicHeight"
       @scrollToTop="$emit('scrollToTop')"
       @onType="$emit('onType')"
       @edit="$emit('edit', $event)"
@@ -129,22 +130,22 @@ export default {
     colors: {
       type: Object,
       required: false,
-      validator: c => 
+      validator: c =>
         'header' in c
-        && 'bg' in c.header 
+        && 'bg' in c.header
         && 'text' in c.header
         && 'launcher' in c
         && 'bg' in c.launcher
         && 'messageList' in c
         && 'bg' in c.messageList
         && 'sentMessage' in c
-        && 'bg' in c.sentMessage 
+        && 'bg' in c.sentMessage
         && 'text' in c.sentMessage
         && 'receivedMessage' in c
-        && 'bg' in c.receivedMessage 
+        && 'bg' in c.receivedMessage
         && 'text' in c.receivedMessage
         && 'userInput' in c
-        && 'bg' in c.userInput 
+        && 'bg' in c.userInput
         && 'text' in c.userInput,
       default: function () {
         return {
@@ -182,6 +183,10 @@ export default {
       default: () => false
     },
     disableUserListToggle: {
+      type: Boolean,
+      default: false
+    },
+    dynamicHeight: {
       type: Boolean,
       default: false
     }
@@ -226,7 +231,7 @@ export default {
   position: relative;
   display: block;
   width: 60px;
-  height: 60px;  
+  height: 60px;
   border-radius: 50%;
   transition: box-shadow 0.2s ease-in-out;
 }

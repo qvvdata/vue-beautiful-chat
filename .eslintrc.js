@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: 'standard',
+  extends: 'plugin:vue/essential',
   plugins: [
     'html'
   ],

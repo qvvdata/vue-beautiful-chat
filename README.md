@@ -1,4 +1,11 @@
-# vue-beautiful-chat
+# vue-beautiful-chat (QVV internal fork)
+
+This is our internal fork of [vue-beautiful-chat](https://github.com/mattmezza/vue-beautiful-chat) which mostly removes features, since it's used to display/replay chat conversations, not for user interactions.
+Hence, we've removed lots of things. You probably don't want to use this version.
+
+----------------
+Original README:
+
 
 `vue-beautiful-chat` provides an intercom-like chat window that can be included easily in any project for free. It provides no messaging facilities, only the view component.
 
@@ -213,8 +220,8 @@ For more detailed examples see the demo folder.
 Replacing default header.
 
 ``` html
-<template v-slot:header> 
-  🤔 Good chat between {{participants.map(m=>m.name).join(' & ')}} 
+<template v-slot:header>
+  🤔 Good chat between {{participants.map(m=>m.name).join(' & ')}}
 </template>
 ```
 
@@ -391,5 +398,5 @@ Good news, message formatting is already added for you. You can enable it by set
 </p>
 </details>
 
- # Join the team 
+ # Join the team
  Do you want to collaborate? Join the project at https://crowdforge.io/projects/581

@@ -1,6 +1,6 @@
 <template>
-  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}">
-    <Header
+  <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen, dynamicHeight: dynamicHeight}">
+    <!-- <Header
       :title="title"
       :imageUrl="titleImageUrl"
       :onClose="onClose"
@@ -12,11 +12,11 @@
         <slot name="header">
         </slot>
       </template>
-    </Header>
-    <UserList 
+    </Header>-->
+    <!-- <UserList
       v-if="showUserList"
       :participants="participants"
-    />
+    /> -->
     <MessageList
       v-if="!showUserList"
       :messages="messages"
@@ -44,6 +44,7 @@
         </slot>
       </template>
     </MessageList>
+    <!--
     <UserInput
       v-if="!showUserList"
       :showEmoji="showEmoji"
@@ -54,21 +55,22 @@
       @onType="$emit('onType')"
       @edit="$emit('edit', $event)"
       :colors="colors" />
+    -->
   </div>
 </template>
 
 <script>
-import Header from './Header.vue'
+//import Header from './Header.vue'
 import MessageList from './MessageList.vue'
-import UserInput from './UserInput.vue'
-import UserList from './UserList.vue'
+//import UserInput from './UserInput.vue'
+//import UserList from './UserList.vue'
 
 export default {
   components: {
-    Header,
+    //Header,
     MessageList,
-    UserInput,
-    UserList
+    //UserInput,
+    //UserList
   },
   props: {
     showEmoji: {
@@ -130,6 +132,10 @@ export default {
     disableUserListToggle: {
       type: Boolean,
       default: false
+    },
+    dynamicHeight: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -154,10 +160,18 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .sc-chat-window {
-  width: 370px;
-  height: calc(100% - 120px);
+  max-height: calc(100vh - 120px);
+  &.dynamicHeight {
+    max-height: none;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+
+  /*width: 370px;
   max-height: 590px;
   position: fixed;
   right: 25px;
@@ -169,7 +183,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   transition: 0.3s ease-in-out;
-  border-radius: 10px;
+  border-radius: 10px;*/
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 

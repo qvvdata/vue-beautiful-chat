@@ -163,7 +163,7 @@ export default {
       }
     },
     _submitTextWhenFile(event, text, file) {
-      if (text && text.length > 0) {  
+      if (text && text.length > 0) {
         this.onSubmit({
           author: 'me',
           type: 'file',
@@ -227,7 +227,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .sc-user-input {
   min-height: 55px;
   margin: 0px;

@@ -2,11 +2,11 @@
   <div class="sc-message--text" :style="messageColors">
     <template>
       <div class="sc-message--toolbox" :style="{background: messageColors.backgroundColor}">
-        <button v-if="me" @click="edit" :disabled="isEditing">
+        <!-- <button v-if="me" @click="edit" :disabled="isEditing">
           <icon-base :color="isEditing? 'black': 'white'" width="10" icon-name="edit">
             <icon-edit />
           </icon-base>
-        </button>
+        </button>-->
         <slot name="text-message-toolbox" :message="message" :me="me">
         </slot>
       </div>
@@ -29,7 +29,7 @@ import IconEdit from './../components/icons/IconEdit.vue'
 import escapeGoat from 'escape-goat'
 import Autolinker from 'autolinker'
 import store from "./../store/"
-const fmt = require('msgdown')
+const fmt = require('msgdown');
 
 export default {
   data() {
@@ -55,7 +55,7 @@ export default {
     messageText() {
       const escaped = escapeGoat.escape(this.message.data.text)
 
-      return Autolinker.link(this.messageStyling ? fmt(escaped) : escaped, {
+      return Autolinker.link(this.messageStyling ? fmt(escaped).replace(/\n/g, '<br />') : escaped, {
         className: 'chatLink',
         truncate: { length: 50, location: 'smart' }
       })

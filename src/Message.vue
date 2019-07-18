@@ -1,36 +1,41 @@
 <template>
-  <div class="sc-message">
-    <div class="sc-message--content" :class="{
+  <div :class="{'sc-message': true, invisible: message.invisible }">
+    <div :class="{
         sent: message.author === 'me',
         received: message.author !== 'me' && message.type !== 'system',
-        system: message.type === 'system'
+        system: message.type === 'system',
+        'sc-message--content': true,
       }">
-      <slot 
+      <slot
         name="user-avatar"
-        :message="message" 
+        :message="message"
         :user="user">
           <div v-if="message.type !== 'system'" :title="authorName" class="sc-message--avatar" :style="{
             backgroundImage: `url(${chatImageUrl})`
           }" v-tooltip="authorName"></div>
       </slot>
-
-      <TextMessage v-if="message.type === 'text'" :message="message" :messageColors="determineMessageColors()" :messageStyling="messageStyling">
-          <template v-slot:default="scopedProps">
-            <slot name="text-message-body" :message="scopedProps.message" :messageText="scopedProps.messageText" :messageColors="scopedProps.messageColors" :me="scopedProps.me">
+      <div>
+        <TextMessage v-if="message.type === 'text'" :message="message" :messageColors="determineMessageColors()" :messageStyling="messageStyling">
+            <template v-slot:default="scopedProps">
+              <slot name="text-message-body" :message="scopedProps.message" :messageText="scopedProps.messageText" :messageColors="scopedProps.messageColors" :me="scopedProps.me">
+              </slot>
+            </template>
+            <template v-slot:text-message-toolbox="scopedProps">
+              <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
+              </slot>
+            </template>
+        </TextMessage>
+        <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />
+        <FileMessage v-else-if="message.type === 'file'" :data="message.data" :messageColors="determineMessageColors()" />
+        <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()" />
+        <SystemMessage v-else-if="message.type === 'system'" :data="message.data" :messageColors="determineMessageColors()">
+            <slot name="system-message-body" :message="message.data">
             </slot>
-          </template>
-          <template v-slot:text-message-toolbox="scopedProps">
-            <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
-            </slot>
-          </template>
-      </TextMessage>
-      <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />
-      <FileMessage v-else-if="message.type === 'file'" :data="message.data" :messageColors="determineMessageColors()" />
-      <TypingMessage v-else-if="message.type === 'typing'" :messageColors="determineMessageColors()" />
-      <SystemMessage v-else-if="message.type === 'system'" :data="message.data" :messageColors="determineMessageColors()">
-          <slot name="system-message-body" :message="message.data">
-          </slot>
-      </SystemMessage>
+        </SystemMessage>
+        <slot name="user-name" :message="message" :user="user">
+          <div v-if="message.type !== 'system'" v-html="user.name" class="message-user-name"></div>
+        </slot>
+      </div>
     </div>
   </div>
 </template>
@@ -89,6 +94,7 @@ export default {
       }
     },
     determineMessageColors() {
+      console.log(this.message);
       return this.message.author === 'me' ? this.sentColorsStyle() : this.receivedColorsStyle()
     }
   },
@@ -102,17 +108,25 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.sc-message {
-  width: 300px;
+<style lang="scss" scoped>
+.sc-message{
+  max-width: 500px;
   margin: auto;
   padding-bottom: 10px;
   display: flex;
+  opacity: 1;
+  transition: opacity 1s ease-out 0s;
+
+
   .sc-message--edited{
     opacity: 0.7;
     word-wrap: normal;
     font-size: xx-small;
     text-align: center;
+  }
+
+  &.invisible {
+    opacity: 0;
   }
 }
 
@@ -153,7 +167,7 @@ export default {
 
 @media (max-width: 450px) {
   .sc-message {
-    width: 80%;
+/*    width: 80%; */
   }
 }
 
@@ -200,7 +214,7 @@ export default {
 .sc-message--content.sent .sc-message--text {
   color: white;
   background-color: #4e8cff;
-  max-width: calc(100% - 120px);
+  //max-width: calc(100% - 120px);
   word-wrap: break-word;
 }
 
@@ -211,7 +225,21 @@ export default {
 .sc-message--content.received .sc-message--text {
   color: #263238;
   background-color: #f4f7f9;
-  margin-right: 40px;
+  @media (min-width: 450px) {
+    margin-right: 40px;
+  }
+  @media (max-width: 450px) {
+    margin-right: 10px;
+  }
+}
+
+.sc-message--content.sent .sc-message--text {
+  @media (min-width: 450px) {
+    margin-left: 40px;
+  }
+  @media (max-width: 450px) {
+    margin-left: 10px;
+  }
 }
 
 .tooltip {
@@ -320,5 +348,11 @@ export default {
       border-color: $color;
     }
   }
+}
+
+.message-user-name {
+  color: grey;
+  font-size: 11px;
+  font-weight: bold;
 }
 </style>

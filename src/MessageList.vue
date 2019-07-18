@@ -51,6 +51,15 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    scroll_next: false
+  }),
+  watch: {
+    messages(old, n) {
+      console.log(this.$refs.scrollList.scrollTop, this.$refs.scrollList.scrollHeight);
+      this.scroll_next = this.alwaysScrollToBottom || (this.$refs.scrollList.scrollTop > this.$refs.scrollList.scrollHeight - this.$refs.scrollList.clientHeight - 20);
+    }
+  },
   methods: {
     _scrollDown () {
       this.$refs.scrollList.scrollTop = this.$refs.scrollList.scrollHeight
@@ -61,7 +70,8 @@ export default {
         }
     },
     shouldScrollToBottom() {
-      return this.alwaysScrollToBottom || (this.$refs.scrollList.scrollTop > this.$refs.scrollList.scrollHeight - 600)
+      console.log('should scroll?', this.scroll_next);
+      return this.scroll_next;
     },
     profile(author) {
       const profile = this.participants.find(profile => profile.id === author)
@@ -90,6 +100,6 @@ export default {
   height: 80%;
   overflow-y: auto;
   background-size: 100%;
-  padding: 40px 0px;
+/*  padding: 40px 0px; */
 }
 </style>
